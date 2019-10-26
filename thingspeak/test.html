@@ -1,0 +1,61 @@
+<html>
+  <meta charset="UTF-8">
+  <head>
+
+  <style type="text/css">
+  body { background-color: #ddd; }
+  #status_div {
+    padding: 1ex;
+    font-family: sans-serif;
+    font-size: 2em;
+    text-align: center;
+    color: whitesmoke;
+  }
+  .open {
+
+      background: green;
+  }
+  .closed {
+      background: red;
+  }     
+
+</style>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+<script type='text/javascript'>
+
+  // set your channel id here
+  var channel_id = 886012;
+  // set your channel's read api key here if necessary
+  var api_key = 'A0VXRM8FPPKUT031';
+
+  function update(){
+  // get the data from thingspeak
+    $.getJSON('https://api.thingspeak.com/channels/' + channel_id + '/feed/last.json?api_key=' + api_key, function(data) {
+      // get the data point
+      state = data.field1;
+      // if there is a data point display it
+      if (state > 0) {
+        $("#status_div").removeClass("closed").addClass("open");
+        $("#status_div").text("OPEN");
+      }else{
+        $("#status_div").removeClass("open").addClass("closed");
+        $("#status_div").text("CLOSED");
+      }
+    });
+  }
+  $(function(){
+    update();
+    setInterval(update,3000);
+  });
+</script>
+
+  </head>
+  <body>
+    <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/886012/charts/1?bgcolor=%23ffffff&color=%2320a620&dynamic=true&results=60&title=open+-+close+banner&type=step&yaxismax=2&yaxismin=0"></iframe>
+    <div id="container">
+      <div id="inner">
+        <div id="status_div" class=""></div>
+      </div>
+    </div>
+  </body>
+</html>
